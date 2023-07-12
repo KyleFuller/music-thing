@@ -1,0 +1,7 @@
+
+Stages:
+    - Playing around stage
+        - Music
+        - Infrastructure
+
+    - Actual product

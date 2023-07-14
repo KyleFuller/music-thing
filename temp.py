@@ -5,16 +5,6 @@ import wave
 
 SAMPLE_RATE = 44_100
 
-def temp_play_and_save(duration, volume, frequency):
-
-    """
-    This function generates, plays, and saves some audio without obvious issue, 
-    but should not actually be used; it is meant mostly just to pick
-    """
-
-
-
-
 def main():
 
     """ 

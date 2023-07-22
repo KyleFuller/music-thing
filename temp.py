@@ -1,27 +1,32 @@
 
-import numpy as np
 from math import sin, pi
 import simpleaudio as sa
 import wave
+import struct
 
 SAMPLE_RATE = 44_100
 
+def linspace(start, stop, num):
+    return [start + i * (stop - start) / num for i in range(num)]
+
 def make_audio(duration, sampler, /):
     """ TEMPORARY """
-    return np.array(list(map(sampler, np.linspace(0, duration, SAMPLE_RATE * duration))));
+
+    return [sampler(s) for s in linspace(0, duration, SAMPLE_RATE * duration)];
 
 def audio_to_wav_data(audio):
     """ TEMPORARY """
-    return (audio * 2**15).astype(np.int16)
+    int_vals = [int(s * (2**15 - 1)) for s in audio]
+    return struct.pack(f"<{len(int_vals)}h", *int_vals)
 
 def write_audio(audio, name='untitled.wav', /):
     """ TEMPORARY """
-    wav_data = audio_to_wav_data(audio)
     with wave.open(name, 'w') as f:
         f.setnchannels(1)
         f.setframerate(SAMPLE_RATE)
         f.setsampwidth(2)
-        f.writeframes(wav_data)
+        
+        f.writeframes(audio_to_wav_data(audio))
 
 def play_audio(audio):
     """ TEMPORARY """

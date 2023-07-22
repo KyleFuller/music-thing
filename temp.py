@@ -43,7 +43,7 @@ def main():
 
     duration = 3
     volume = 0.02
-    frequency = 330
+    frequency = 330 
 
     audio = make_audio(duration, lambda t: sin(t * 2 * pi * frequency) * volume)
 

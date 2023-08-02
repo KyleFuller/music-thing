@@ -9,10 +9,10 @@ SAMPLE_RATE = 44_100
 def linspace(start, stop, num):
     return [start + i * (stop - start) / num for i in range(num)]
 
-def make_audio(duration, sampler, /):
+def make_audio(start, stop, sampler, /):
     """ TEMPORARY """
 
-    return [sampler(s) for s in linspace(0, duration, SAMPLE_RATE * duration)];
+    return ([sampler(s) for s in linspace(start, stop, SAMPLE_RATE * (stop - start))])
 
 def audio_to_wav_data(audio):
     """ TEMPORARY """

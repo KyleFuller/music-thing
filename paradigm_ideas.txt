@@ -1,0 +1,34 @@
+
+
+
+
+a = [{Duration: 2, Scale: ionian(C3), Degree: 0}, {Duration: 3, NoteLetter: G3}]
+
+a_with_durations_and_frequencies = [{Duration: note.Duration, Frequency: note.Scale(Degree) if note.has({Scale, Degree}) else note.NoteLetter.get_frequency()} for note in a]
+
+make_audio_from_notes_with_durations_and_frequencies(a)
+
+-----------
+Scale, Degree -> Frequency
+NoteLetter -> Frequency
+
+
+
+@blah(Scale, Degree)
+def Frequency(note):
+    return Scale(note)(Degree(note))
+
+@blah(NoteLetter)
+def Frequency(note):
+    return NoteLetter(note).get_frequency()
+
+def make_audio_from_note_with_durations_and_frequency(note):
+    frequency = Frequency(note)
+    ...
+
+a = [{Duration: 2, Scale: ionian(C3), Degree: 0}, {Duration: 3, NoteLetter: G3}]
+
+for note in a:
+    print(Frequency(note))
+
+make_audio_from_notes_with_durations_and_frequencies(a)

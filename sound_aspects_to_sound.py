@@ -1,4 +1,6 @@
-from audio import *
+from audio_production import *
+from audio_playing import play_audio
+
 import math
 
 # from matplotlib import pyplot as plt
@@ -88,7 +90,7 @@ def main():
     if len(audio) > 0 and stop - start <= 30:
         play_audio(audio).wait_done()
 
-    # write_audio(audio, 'test.wav')
+    # save_audio(audio, 'test.wav')
 
 
 if __name__ == "__main__":

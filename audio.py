@@ -11,17 +11,13 @@ def linspace(start, stop, num):
     return [start + i * (stop - start) / num for i in range(num)]
 
 def make_audio(start, stop, sampler, /):
-    """ TEMPORARY """
-
     return ([sampler(s) for s in linspace(start, stop, SAMPLE_RATE * (stop - start))])
 
 def audio_to_wav_data(audio):
-    """ TEMPORARY """
     int_vals = [int(s * (2**15 - 1)) for s in audio]
     return struct.pack(f"<{len(int_vals)}h", *int_vals)
 
 def write_audio(audio, name='untitled.wav', /):
-    """ TEMPORARY """
     with wave.open(name, 'w') as f:
         f.setnchannels(1)
         f.setframerate(SAMPLE_RATE)
@@ -30,7 +26,6 @@ def write_audio(audio, name='untitled.wav', /):
         f.writeframes(audio_to_wav_data(audio))
 
 def play_audio(audio):
-    """ TEMPORARY """
     wav_data = audio_to_wav_data(audio)
     play_obj = sa.play_buffer(wav_data, 1, 2, SAMPLE_RATE)
     return play_obj

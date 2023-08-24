@@ -2,7 +2,9 @@ from matplotlib import pyplot as plt
 from pitches import *
 from sound_aspects_to_sound import foo
 
-from audio import *
+from audio_production import *
+from audio_playing import play_audio
+from audio_saving import save_audio
 from math import *
 
 def make_two_notes(duration):
@@ -85,7 +87,7 @@ def main():
     two_notes = make_two_notes(duration)
     audio = foo(0, duration, lambda x, t: sin(2 * pi * x), play_CM7_arpegio, volume)
     play_audio(audio).wait_done()
-    write_audio(audio, 'test.wav')
+    save_audio(audio, 'test.wav')
 
 
 if __name__ == "__main__":

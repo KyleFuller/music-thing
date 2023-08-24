@@ -1,7 +1,9 @@
-from temp import *
 from matplotlib import pyplot as plt
-from math import *
 from pitches import *
+from sound_aspects_to_sound import foo
+
+from audio import *
+from math import *
 
 def make_two_notes(duration):
     def two_notes(t):
@@ -45,20 +47,20 @@ def play_CM7_arpegio(t):
         return B(4)
         
     
-"""simple function that takes a volume function and a frequency function and
- returns the audio that results from the 2"""
-def foo(duration, volume, frequency):
+# """simple function that takes a volume function and a frequency function and
+#  returns the audio that results from the 2"""
+# def foo(duration, volume, frequency):
 
-    audio = [0 for i in range(SAMPLE_RATE * duration)]
-    times = linspace(0, duration, SAMPLE_RATE * duration)
+#     audio = [0 for i in range(SAMPLE_RATE * duration)]
+#     times = linspace(0, duration, SAMPLE_RATE * duration)
 
-    summ = 0
-    for i, t in enumerate(times):
-        summ += frequency(t) / SAMPLE_RATE
-        audio[i] = sin(summ * 2 * pi) * volume(t)
-    plt.plot(audio)
-    plt.show()
-    return audio
+#     summ = 0
+#     for i, t in enumerate(times):
+#         summ += frequency(t) / SAMPLE_RATE
+#         audio[i] = sin(summ * 2 * pi) * volume(t)
+#     plt.plot(audio)
+#     plt.show()
+#     return audio
 
 
 def main():
@@ -81,7 +83,7 @@ def main():
     "audio = foo(duration, volume, frequency )"
 
     two_notes = make_two_notes(duration)
-    audio = foo(duration, volume, play_CM7_arpegio )
+    audio = foo(0, duration, lambda x, t: sin(2 * pi * x), play_CM7_arpegio, volume)
     play_audio(audio).wait_done()
     write_audio(audio, 'test.wav')
 

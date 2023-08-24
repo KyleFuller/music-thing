@@ -3,6 +3,7 @@ from math import sin, pi
 import simpleaudio as sa
 import wave
 import struct
+from time import sleep
 
 SAMPLE_RATE = 44_100
 

@@ -7,6 +7,7 @@ SAMPLE_RATE = 44_100
 
 def make_audio(duration, sampler, /):
     """ TEMPORARY """
+    print(np.linspace(0, duration, SAMPLE_RATE * duration))
     return np.array(list(map(sampler, np.linspace(0, duration, SAMPLE_RATE * duration))));
 
 def audio_to_wav_data(audio):

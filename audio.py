@@ -4,14 +4,12 @@ import simpleaudio as sa
 import wave
 import struct
 from time import sleep
+from utils import linspace as _linspace
 
 SAMPLE_RATE = 44_100
 
-def linspace(start, stop, num):
-    return [start + i * (stop - start) / num for i in range(num)]
-
 def make_audio(start, stop, sampler, /):
-    return ([sampler(s) for s in linspace(start, stop, SAMPLE_RATE * (stop - start))])
+    return ([sampler(s) for s in _linspace(start, stop, SAMPLE_RATE * (stop - start))])
 
 def audio_to_wav_data(audio):
     int_vals = [int(s * (2**15 - 1)) for s in audio]

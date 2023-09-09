@@ -1,6 +1,6 @@
 # type: ignore
 
-from pitches_letters import *
+from pitch_letters import *
 from sound_aspects_to_sound import foo
 from FunctionOnFiniteInterval import FunctionOnFiniteInterval
 

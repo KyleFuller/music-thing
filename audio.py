@@ -6,8 +6,6 @@ import simpleaudio as sa # type: ignore
 import wave
 import struct
 
-
-
 SAMPLE_RATE = 44_100
 
 def make_audio(start: float, stop: float, sampler: _SoundFunction, /):

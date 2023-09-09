@@ -1,11 +1,13 @@
-from matplotlib import pyplot as plt
-from pitches import *
+# type: ignore
+
+from pitches_letters import *
 from sound_aspects_to_sound import foo
+from FunctionOnFiniteInterval import FunctionOnFiniteInterval
 
 from audio import play_audio as _play_audio, write_audio as _write_audio
 from math import *
 
-def make_two_notes(duration):
+def make_two_notes(duration: float):
     def two_notes(t):
         if floor(t) < (duration /2):
             return A(4)

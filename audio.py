@@ -1,15 +1,15 @@
 from utils import linspace as _linspace
-from SoundFunction import SoundFunction as _SoundFunction
 
 import math as _math
 import simpleaudio as sa # type: ignore
 import wave
 import struct
+from typing import Callable as _Callable
 
 SAMPLE_RATE = 44_100
 
-def make_audio(start: float, stop: float, sampler: _SoundFunction, /):
-    return ([sampler(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))])
+def make_audio(sound: _Callable[[float], float], start: float, stop: float, /):
+    return ([sound(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))])
 
 def audio_to_wav_data(audio: list[float]):
     int_vals = [int(s * (2**15 - 1)) for s in audio]

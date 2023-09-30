@@ -4,6 +4,50 @@ import math as _math
 from typing import Callable as _Fn
     
 
+def _catmull_rom_interpolate(y0: float, y1: float, y2: float, y3: float) -> _Fn[[float], float]:
+    def interpolation(mu: float):
+        mu_sq = mu * mu
+        a0 = -0.5*y0 + 1.5*y1 - 1.5*y2 + 0.5*y3
+        a1 = y0 - 2.5*y1 + 2*y2 - 0.5*y3
+        a2 = -0.5*y0 + 0.5*y2
+        a3 = y1
+        return a0*mu*mu_sq+a1*mu_sq+a2*mu+a3
+    return interpolation
+
+def _quadratic_interpolate(y0: float, y1: float, y2: float) -> _Fn[[float], float]:
+    def interpolation(mu: float):
+
+        a = 0.5 * (y0 - 2 * y1 + y2)
+        b = 0.5 * (y2 - y0)
+        c = y1
+        
+        return a * mu**2 + b * mu + c
+
+    return interpolation
+
+def _quadratic_approximate(y0: float, y1: float, y2: float, y3: float) -> _Fn[[float], float]:
+    q_left = _quadratic_interpolate(y0, y1, y2)
+    q_right = _quadratic_interpolate(y3, y2, y1)
+    def approximation(mu: float):
+        return 0.5*q_left(mu) + 0.5*q_right(1 - mu)
+    return approximation
+
+def _cubic_approximate(y0: float, y1: float, y2: float, y3: float) -> _Fn[[float], float]:
+    cr = _catmull_rom_interpolate(y0, y1, y2, y3)
+    q = _quadratic_approximate(y0, y1, y2, y3)
+    
+    def approximation(mu:float):
+        return 1/3*cr(mu) + 2/3*q(mu)
+    
+    return approximation
+
+def _linear_approximate(y0: float, y1: float) -> _Fn[[float], float]: # type: ignore
+
+    def approximation(mu:float):
+        return y0 * (1 - mu) + y1 * mu
+    
+    return approximation
+
 def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]:
     
     # TODO: Document this mess.
@@ -37,54 +81,15 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
                 return from_zero[floor_index]
             floor_index_t = floor_index * inv_step_rate
 
-            # this is an interpolation method that I hacked up through trial and error
-                # and seems to be accurate almost to machine precision for well-behaved
-                # functions.  It works by using the error of one cubic interpolation
-                # method to cancel out most of the error of another cubic interpolation 
-                # method.  It needs clarity, documentation, cleanup, and optimization. 
 
-            if floor_index >= 0:
-                # TODO: Put this stuff into functions, stop reusing variable names,
-                    # and EXPLAIN.
+            y0 = from_zero[floor_index - 1] if floor_index > 0 else -(_f(-0.5 * inv_step_rate) * 2/3 + 1/3 * (_f((- 1) * inv_step_rate) + _f(0)) / 2) * inv_step_rate
+            y1 = from_zero[floor_index]
+            y2 = from_zero[ceil_index]
+            y3 = from_zero[ceil_index + 1]
 
-                mu = ((t - floor_index_t) * step_rate)
-                mu2 = mu * mu
-                y0 = from_zero[floor_index - 1] if floor_index > 0 else -(_f(-0.5 * inv_step_rate) * 2/3 + 1/3 * (_f((- 1) * inv_step_rate) + _f(0)) / 2) * inv_step_rate
-                y1 = from_zero[floor_index]
-                y2 = from_zero[ceil_index]
-                y3 = from_zero[ceil_index + 1]
-                a0 = -0.5*y0 + 1.5*y1 - 1.5*y2 + 0.5*y3
-                a1 = y0 - 2.5*y1 + 2*y2 - 0.5*y3
-                a2 = -0.5*y0 + 0.5*y2
-                a3 = y1
-                v = a0*mu*mu2+a1*mu2+a2*mu+a3
+            mu = ((t - floor_index_t) * step_rate)
+            return _cubic_approximate(y0, y1, y2, y3)(mu)
 
-                y0 = from_zero[floor_index - 1] if floor_index > 0 else -(_f(-0.5 * inv_step_rate) * 2/3 + 1/3 * (_f((- 1) * inv_step_rate) + _f(0)) / 2) * inv_step_rate
-                y1 = from_zero[floor_index]
-                y2 = from_zero[ceil_index]
-                mu = ((t - floor_index_t) * step_rate)
-
-                a = 0.5 * (y0 - 2 * y1 + y2)
-                b = 0.5 * (y2 - y0)
-                c = y1
-                
-                g = a * mu**2 + b * mu + c
-
-                y0_ = from_zero[ceil_index + 1]
-                y1_ = from_zero[ceil_index]
-                y2_ = from_zero[floor_index]
-                mu_ = 1 - mu
-
-                a_ = 0.5 * (y0_ - 2 * y1_ + y2_)
-                b_ = 0.5 * (y2_ - y0_)
-                c_ = y1_
-
-                g_ = a_ * mu_**2 + b_ * mu_ + c_
-
-                other_v = (g + g_) / 2
-
-                return v * 1 / 3 + other_v * 2 / 3
-            return from_zero[floor_index] + (from_zero[ceil_index] - from_zero[floor_index]) * ((t - floor_index_t) * step_rate)
         return integral
 
     positive_side_integrate = integrate_from_zero_to_nonnegative(f)

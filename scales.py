@@ -1,10 +1,10 @@
 
-from typing import Callable as _Callable
+from typing import Callable as _Fn
 
-PitchKey = _Callable[[int], float]
-Scale = _Callable[[float], PitchKey]
+Key = _Fn[[int], float]
+Scale = _Fn[[float], Key]
 
-def harmonic_scale(root_freq: float, /) -> PitchKey:
+def harmonic_scale(root_freq: float, /) -> Key:
     def pitch_key(d: int):
         return root_freq * 2 ** (d / 12)
     return pitch_key
@@ -34,6 +34,9 @@ aeolian_scale = make_mode(ionian_scale, 5)
 locrian_scale = make_mode(ionian_scale, 6)
 
 major_pentatonic_scale = derive_scale(harmonic_scale, [0, 2, 4, 7, 9])
+suspended_pentatonic_scale = make_mode(major_pentatonic_scale, 1)
+blues_minor_pentatonic_scale = make_mode(major_pentatonic_scale, 2)
+blues_major_pentatonic_scale = make_mode(major_pentatonic_scale, 3)
 minor_pentatonic_scale = make_mode(major_pentatonic_scale, 4)
 
 wholetone_scale = derive_scale(harmonic_scale, [0, 2, 4, 6, 8, 10])

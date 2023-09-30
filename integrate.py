@@ -8,7 +8,7 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
     
     # TODO: Document this mess.
 
-    def integrate_from_zero_to_nonnegative(f: _Fn[[float], float]):
+    def integrate_from_zero_to_nonnegative(_f: _Fn[[float], float]):
         from_zero = [0.]
 
         step_rate = _SAMPLE_RATE
@@ -27,9 +27,9 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
             
             summ = from_zero[old_len - 1]
             for i in range(old_len, old_len + num_new_points):
-                val_midpoint = f((i - 0.5) * inv_step_rate) # use just this for less overkill precision.
+                val_midpoint = _f((i - 0.5) * inv_step_rate) # use just this for less overkill precision.
                     # use both for simpson's method.
-                val_sides = (f((i - 1) * inv_step_rate) + f(i * inv_step_rate)) / 2
+                val_sides = (_f((i - 1) * inv_step_rate) + _f(i * inv_step_rate)) / 2
                 from_zero[i] = summ = summ + (2/3 * val_midpoint + 1/3 * val_sides) * inv_step_rate
             floor_index = _math.floor(t * step_rate)
 
@@ -49,7 +49,7 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
 
                 mu = ((t - floor_index_t) * step_rate)
                 mu2 = mu * mu
-                y0 = from_zero[floor_index - 1] if floor_index > 0 else -from_zero[ceil_index]
+                y0 = from_zero[floor_index - 1] if floor_index > 0 else -(_f(-0.5 * inv_step_rate) * 2/3 + 1/3 * (_f((- 1) * inv_step_rate) + _f(0)) / 2) * inv_step_rate
                 y1 = from_zero[floor_index]
                 y2 = from_zero[ceil_index]
                 y3 = from_zero[ceil_index + 1]
@@ -59,7 +59,7 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
                 a3 = y1
                 v = a0*mu*mu2+a1*mu2+a2*mu+a3
 
-                y0 = from_zero[floor_index - 1] if floor_index > 0 else -from_zero[ceil_index]
+                y0 = from_zero[floor_index - 1] if floor_index > 0 else -(_f(-0.5 * inv_step_rate) * 2/3 + 1/3 * (_f((- 1) * inv_step_rate) + _f(0)) / 2) * inv_step_rate
                 y1 = from_zero[floor_index]
                 y2 = from_zero[ceil_index]
                 mu = ((t - floor_index_t) * step_rate)

@@ -28,9 +28,9 @@ def test():
     for i, _ in enumerate(ts):
         assert _is_approx(computed_vals[i], target_vals[i])
     
-    from matplotlib import pyplot as plt
-    plt.plot([computed_vals[i] - target_vals[i] for i in range(len(ts))])
-    plt.show()
+    # from matplotlib import pyplot as plt
+    # plt.plot([computed_vals[i] - target_vals[i] for i in range(len(ts))])
+    # plt.show()
 
 
 if __name__ == '__main__':

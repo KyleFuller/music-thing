@@ -36,13 +36,12 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
                 return from_zero[floor_index]
             floor_index_t = floor_index * inv_step_rate
 
-            # this is an interpolation method I hacked up that seems to go essentially
-                # all the way to machine precision.  looking at a zoomed-in
-                # error plot appears to mostly just show randomwalk-esque noise
-                # going up or down by machine-epsilons.  The method works by
-                # combining a couple of cubic interpolation methods to cancel out
-                # eachothers' errors but needs documentation, cleanup, and optimization. 
-                # Also, the "if floor_index > 0" kind of ruins it around zero, so that
+            # this is an interpolation method that I hacked up through trial and error
+                # and seems to be accurate almost to machine precision for well-behaved
+                # functions.  It works by using the error of one cubic interpolation
+                # method to cancel out most of the error of another cubic interpolation 
+                # method.  It needs clarity, documentation, cleanup, and optimization. 
+                # Also, the "if floor_index > 0" kind of ruins it around zero, and this
                 # will need to be sorted out.
             if floor_index > 0:
                 # TODO: Put this stuff into functions, stop reusing variable names,

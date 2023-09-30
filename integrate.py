@@ -2,14 +2,15 @@ from audio import SAMPLE_RATE as _SAMPLE_RATE
 
 import math as _math
 from typing import Callable as _Fn
+    
 
 def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]:
     
     # TODO: Document this mess.
 
     def integrate_from_zero_to_nonnegative(f: _Fn[[float], float]):
-
         from_zero = [0.]
+
         step_rate = _SAMPLE_RATE
         inv_step_rate = 1 / step_rate
         batch_size = 64
@@ -41,15 +42,14 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
                 # functions.  It works by using the error of one cubic interpolation
                 # method to cancel out most of the error of another cubic interpolation 
                 # method.  It needs clarity, documentation, cleanup, and optimization. 
-                # Also, the "if floor_index > 0" kind of ruins it around zero, and this
-                # will need to be sorted out.
-            if floor_index > 0:
+
+            if floor_index >= 0:
                 # TODO: Put this stuff into functions, stop reusing variable names,
                     # and EXPLAIN.
 
                 mu = ((t - floor_index_t) * step_rate)
                 mu2 = mu * mu
-                y0 = from_zero[floor_index - 1]
+                y0 = from_zero[floor_index - 1] if floor_index > 0 else -from_zero[ceil_index]
                 y1 = from_zero[floor_index]
                 y2 = from_zero[ceil_index]
                 y3 = from_zero[ceil_index + 1]
@@ -59,7 +59,7 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
                 a3 = y1
                 v = a0*mu*mu2+a1*mu2+a2*mu+a3
 
-                y0 = from_zero[floor_index - 1]
+                y0 = from_zero[floor_index - 1] if floor_index > 0 else -from_zero[ceil_index]
                 y1 = from_zero[floor_index]
                 y2 = from_zero[ceil_index]
                 mu = ((t - floor_index_t) * step_rate)

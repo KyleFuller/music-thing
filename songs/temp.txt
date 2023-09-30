@@ -1,0 +1,21 @@
+
+
+durations = ([1, 2, 1] * 2 + [1] * 8) * 2
+a_degrees = [0] * 3 + [-1] * 3
+degrees = a_degrees + [1, 2, 1, 0, -1, -3, -5, -6] + a_degrees + [1, 2, 1, -1, 0, -3, -5, -7]
+duration_degree_pairs = list(zip(durations, degrees))
+
+scale = harmonic(C(4))
+instrument = square_instrument
+notes = [DurationScaleDegreeInstrumentNote(duration, scale, degree, square_instrument) for (duration, degree) in duration_degree_pairs]
+
+
+duration_notes = [{Duration: duration} for duration in ([1, 2, 1] * 2 + [1] * 8) * 2]
+a_degrees = [0] * 3 + [-1] * 3
+degree_notes = [{Degree: degree} for degree in a_degrees + a_degrees + [1, 2, 1, 0, -1, -3, -5, -6] + a_degrees + [1, 2, 1, -1, 0, -3, -5, -7]]
+duration_degree_notes = [combine(duration_note, degree_note) for (duration_note, degree_note) in zip(duration_notes, degree_notes)]
+
+scale = harmonic(C(4))
+instrument = square_instrument
+notes = [combine(duration_degree_note, {Scale: scale, Instrument: square_instrument} for duration_degree_note in duration_degree_notes]
+

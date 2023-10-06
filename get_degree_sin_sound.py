@@ -1,8 +1,6 @@
 import math as _math
 from typing import Callable as _Fn
-from functools import cache as _cache
 
-@_cache
 def get_degree_sin_sound(
         degree: int, 
         key: _Fn[[int], float], 

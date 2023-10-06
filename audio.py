@@ -5,11 +5,9 @@ import simpleaudio as _sa # type: ignore
 import wave as _wave
 import struct as _struct
 from typing import Callable as _Fn
-from functools import cache as _cache
 
 SAMPLE_RATE = 44_100
 
-@_cache
 def make_audio(sound: _Fn[[float], float], start: float, stop: float, /) -> list[float]:
     return [sound(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))]
 

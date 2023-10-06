@@ -1,5 +1,4 @@
-from integrate import integrate_on_unknown_interval as _integrate_on_unknown_interval
-
+from integrate import integrate as _integrate
 from typing import Callable as _Fn
 
 def make_sound(
@@ -21,7 +20,7 @@ def make_sound(
     get_volume should be bound between -1 and 1.
     """
 
-    freq_integral = _integrate_on_unknown_interval(get_frequency)
+    freq_integral = _integrate(get_frequency)
 
     def sound(t: float):
         return get_waveform(t)(freq_integral(t)) * get_volume(t)

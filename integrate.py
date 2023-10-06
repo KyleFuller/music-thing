@@ -1,6 +1,5 @@
 from typing import Callable as _Fn
 
-from audio import SAMPLE_RATE as _SAMPLE_RATE
 from cumulative_functions import (
     get_cumulative_int_func_from_indexed_accumulators as _get_cumulative_int_func_from_indexed_accumulators)
 from function_approximation import (
@@ -17,13 +16,12 @@ def _calculate_segment_integral_by_index(f: _Fn[[float], float], i: int, start: 
         start + (i + 0.5) * step_size, 
         start + (i + 1) * step_size)
 
-def integrate(f: _Fn[[float], float], /) -> _Fn[[float], float]:
-    step_rate = _SAMPLE_RATE
-    step_duration = 1 / step_rate
+def integrate(f: _Fn[[float], float], /, step_rate: float) -> _Fn[[float], float]:
+    step_size = 1 / step_rate
 
     integral_vals = _get_cumulative_int_func_from_indexed_accumulators(
         0., 
-        lambda so_far, i: so_far + _calculate_segment_integral_by_index(f, i, 0, step_duration), 
-        lambda so_far, i: so_far - _calculate_segment_integral_by_index(f, i - 1, 0, step_duration))
+        lambda so_far, i: so_far + _calculate_segment_integral_by_index(f, i, 0, step_size), 
+        lambda so_far, i: so_far - _calculate_segment_integral_by_index(f, i - 1, 0, step_size))
 
     return lambda t: _approximate_int_input_func_on_float_input(integral_vals, t * step_rate)

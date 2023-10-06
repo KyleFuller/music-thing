@@ -1,17 +1,25 @@
-# type: ignore
-from math import sin as _sin, cos as _cos, exp as _exp, erf as _erf, sqrt as _sqrt, pi as _pi, log as _log
+from math import sin as _sin, cos as _cos, exp as _exp, erf as _erf, sqrt as _sqrt, pi as _pi
 import sys as _sys
 _sys.path.append('.')
 
+from audio import SAMPLE_RATE as _SAMPLE_RATE
 from integrate import integrate as _integrate
+from typing import Callable as _Fn
 from utils import linspace as _linspace
 
-def _is_approx(x, y, tol):
+_RVFn = _Fn[[float], float] # type alias for real-valued function
+
+def _is_approx(x: float, y: float, tol: float):
     return abs(y - x) <= tol
 
-def _integral_value_test(f, integrate, ts, true_integral, tol):
+def _integral_value_test(
+        f: _RVFn, 
+        integrate: _Fn[[_RVFn, float], _RVFn] ,
+        ts: list[float], 
+        true_integral: _RVFn, 
+        tol: float):
     
-    integral = integrate(f)
+    integral = integrate(f, _SAMPLE_RATE)
 
     computed_vals = [integral(t) for t in ts]
     target_vals =  [true_integral(t) for t in ts]
@@ -24,27 +32,24 @@ def test():
     
     ts = _linspace(-0.5 + 0.001, 0.5 - 0.001, 10 * 44100)
 
-    def adjust_constant(integral_from_zero):
-        return lambda t: integral_from_zero(t) - integral_from_zero(-0.5)
-
-    f = lambda t: 10 * t
-    integral = lambda t: 5 * t ** 2
+    f: _RVFn = lambda t: 10 * t
+    integral: _RVFn = lambda t: 5 * t ** 2
     _integral_value_test(f, _integrate, ts, integral, tol=1e-14)
 
-    f = lambda t: _exp(- (10 * t)**2)
-    integral = lambda t: _sqrt(_pi) / 2 * _erf(10 * t) / 10
+    f: _RVFn = lambda t: _exp(- (10 * t)**2)
+    integral: _RVFn = lambda t: _sqrt(_pi) / 2 * _erf(10 * t) / 10
     _integral_value_test(f, _integrate, ts, integral, tol=1e-15)
 
-    f = lambda t: _exp(5 * t)
-    integral = lambda t: (_exp(5 * t) - 1) / 5
+    f: _RVFn = lambda t: _exp(5 * t)
+    integral: _RVFn = lambda t: (_exp(5 * t) - 1) / 5
     _integral_value_test(f, _integrate, ts, integral, tol=1e-13)
 
-    f = lambda t: _sin(5 * t)
-    integral = lambda t: (1 -_cos(5 * t)) / 5
+    f: _RVFn = lambda t: _sin(5 * t)
+    integral: _RVFn = lambda t: (1 -_cos(5 * t)) / 5
     _integral_value_test(f, _integrate, ts, integral, tol=1e-14)
 
-    f = lambda t: t ** (1/3) if t >= 0 else -(-t)**(1/3)
-    integral = lambda t: 3 / 4 * t * f(t)
+    f: _RVFn = lambda t: t ** (1/3) if t >= 0 else -(-t)**(1/3)
+    integral: _RVFn = lambda t: 3 / 4 * t * f(t)
     _integral_value_test(f, _integrate, ts, integral, tol=1e-7)
 
 

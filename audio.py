@@ -10,10 +10,10 @@ from functools import cache as _cache
 SAMPLE_RATE = 44_100
 
 @_cache
-def make_audio(sound: _Fn[[float], float], start: float, stop: float, /):
+def make_audio(sound: _Fn[[float], float], start: float, stop: float, /) -> list[float]:
     return [sound(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))]
 
-def audio_to_wav_data(audio: list[float], /):
+def audio_to_wav_data(audio: list[float], /) -> bytes:
     int_vals = [int(s * (2**15 - 1)) for s in audio]
     return _struct.pack(f"<{len(int_vals)}h", *int_vals)
 

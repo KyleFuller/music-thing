@@ -3,7 +3,7 @@ import sys as _sys
 _sys.path.append('.')
 
 from audio import SAMPLE_RATE as _SAMPLE_RATE
-from integrate import integrate as _integrate
+from integrate import integrate as _integrate, integrate_with_step_rate as _integrate_with_step_rate
 from typing import Callable as _Fn
 from utils import linspace as _linspace
 
@@ -30,7 +30,7 @@ def _integral_value_test(
 def test():
     ts = _linspace(-0.5, 0.5, 10 * _SAMPLE_RATE)
 
-    integrate: _Fn[[_RVFn], _RVFn] = lambda f: _integrate(f, 4096)
+    integrate: _Fn[[_RVFn], _RVFn] = lambda f: _integrate(f)
 
     f: _RVFn = lambda t: 10 * t
     integral: _RVFn = lambda t: 5 * t ** 2
@@ -50,11 +50,11 @@ def test():
 
     f: _RVFn = lambda t: t ** (1/3) if t >= 0 else -(-t)**(1/3)
     integral: _RVFn = lambda t: 3 / 4 * t * f(t)
-    _integral_value_test(f, lambda f: _integrate(f, _SAMPLE_RATE), ts, integral, tol=1e-7)
+    _integral_value_test(f, lambda f: _integrate_with_step_rate(f, _SAMPLE_RATE), ts, integral, tol=1e-7)
 
 def benchmark(nsec: int, step_rate:float, /):
     ts = _linspace(-nsec/2, nsec/2, nsec * _SAMPLE_RATE)
-    integral = _integrate(lambda x: _sin(x), step_rate)
+    integral = _integrate_with_step_rate(lambda x: _sin(x), step_rate)
     [integral(t) for t in ts]
 
 if __name__ == '__main__':

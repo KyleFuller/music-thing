@@ -1,8 +1,6 @@
 from integrate import integrate as _integrate
 from typing import Callable as _Fn
 
-from audio import SAMPLE_RATE as _SAMPLE_RATE
-
 def make_sound(
         get_waveform: _Fn[[float], _Fn[[float], float]],
         get_frequency: _Fn[[float], float],
@@ -22,7 +20,7 @@ def make_sound(
     get_volume should be bound between -1 and 1.
     """
 
-    freq_integral = _integrate(get_frequency, _SAMPLE_RATE)
+    freq_integral = _integrate(get_frequency)
 
     def sound(t: float):
         return get_waveform(t)(freq_integral(t)) * get_volume(t)

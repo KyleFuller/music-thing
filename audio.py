@@ -11,7 +11,7 @@ SAMPLE_RATE = 44_100
 
 @_cache
 def make_audio(sound: _Fn[[float], float], start: float, stop: float, /):
-    return ([sound(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))])
+    return [sound(s) for s in _linspace(start, stop, _math.ceil(SAMPLE_RATE * (stop - start)))]
 
 def audio_to_wav_data(audio: list[float]):
     int_vals = [int(s * (2**15 - 1)) for s in audio]

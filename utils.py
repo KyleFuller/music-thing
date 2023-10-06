@@ -1,2 +1,3 @@
-def linspace(start: float, stop: float, num: int) -> list[float]:
-    return [start + i * (stop - start) / num for i in range(num)]
+def linspace(start: float, stop: float, num: int, /) -> list[float]:
+    step_duration = (stop - start) / num
+    return [start + i * step_duration for i in range(num)]

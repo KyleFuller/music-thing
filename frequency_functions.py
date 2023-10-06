@@ -7,7 +7,7 @@ from FunctionOnFiniteInterval import FunctionOnFiniteInterval
 from audio import play_audio as _play_audio, write_audio as _write_audio
 from math import *
 
-def make_two_notes(duration: float):
+def make_two_notes(duration: float, /):
     def two_notes(t):
         if floor(t) < (duration /2):
             return A(4)
@@ -15,7 +15,7 @@ def make_two_notes(duration: float):
             return G(5)
     return two_notes
 
-def simple_melody(t):
+def simple_melody(t, /):
     if t < 5:
         if floor(t) % 2 == 0:
             return A(4)
@@ -27,7 +27,7 @@ def simple_melody(t):
         else:
             return G(5)
         
-def melody(t):
+def melody(t, /):
     if floor(t) % 4 == 0:
         return C(4)
     if floor(t) % 4 == 1:
@@ -38,7 +38,7 @@ def melody(t):
         return A(4)
     
 
-def play_CM7_arpegio(t):
+def play_CM7_arpegio(t, /):
     if floor(t) % 4 == 0:
         return C(4)
     if floor(t) % 4 == 1:

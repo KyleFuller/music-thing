@@ -1,4 +1,3 @@
-import math as _math
 from typing import Callable as _Fn
 
 from audio import SAMPLE_RATE as _SAMPLE_RATE
@@ -18,7 +17,7 @@ def _calculate_segment_integral_by_index(f: _Fn[[float], float], i: int, start: 
         start + (i + 0.5) * step_size, 
         start + (i + 1) * step_size)
 
-def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]:
+def integrate(f: _Fn[[float], float]) -> _Fn[[float], float]:
     step_rate = _SAMPLE_RATE
     step_duration = 1 / step_rate
 
@@ -28,17 +27,3 @@ def integrate_on_unknown_interval(f: _Fn[[float], float]) -> _Fn[[float], float]
         backward=lambda so_far, i: so_far - _calculate_segment_integral_by_index(f, i - 1, 0, step_duration))
 
     return lambda t: _approximate_int_input_func_on_float_input(integral_vals, t * step_rate)
-            
-def integrate_on_known_interval(f: _Fn[[float], float], start: float, stop: float) -> _Fn[[float], float]:
-    step_rate = _SAMPLE_RATE
-    step_duration = 1 / _SAMPLE_RATE
-    auditory_duration = stop - start
-    num_steps = _math.ceil(auditory_duration * step_rate)
-    integral_vals_ls = [0.] * (num_steps + 1)
-    for i in range(1, num_steps):
-        integral_vals_ls[i] = integral_vals_ls[i - 1] + _calculate_segment_integral_by_index(f, i - 1, start, step_duration)
-    def integral_vals(i: int): 
-        return integral_vals_ls[i]
-    return lambda t: _approximate_int_input_func_on_float_input(integral_vals, (t - start) * step_rate)
-
-    

@@ -80,7 +80,11 @@ def cubic_approximate(lefter: float, left: float, right: float, righter: float, 
     return approximation
 
 def approximate_int_input_func_on_float_input(f: _Fn[[int], float], real_index: float, /) -> float:
-
+    """
+    Takes a function from the integers to the reals and a real input, and returns an approximation of the value that
+    the integer-taking function would take on the real input if the integer-taking function's domain were to be expanded
+    to the reals.
+    """
     left_index = _math.floor(real_index)
     right_index = left_index + 1
     

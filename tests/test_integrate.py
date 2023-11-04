@@ -1,23 +1,22 @@
 from math import sin as _sin, cos as _cos, exp as _exp, erf as _erf, sqrt as _sqrt, pi as _pi
+from typing import Callable as _Fn, Iterable as _Iterable
 import sys as _sys
 _sys.path.append('.')
 
 from audio import SAMPLE_RATE as _SAMPLE_RATE
 from integrate import integrate as _integrate, integrate_with_step_rate as _integrate_with_step_rate
-from typing import Callable as _Fn
-from utils import linspace as _linspace
+from utils import linspace as _linspace, iterable_as_collection as _iterable_as_collection, is_approx as _is_approx
 
 _RVFn = _Fn[[float], float] # type alias for real-valued function
-
-def _is_approx(x: float, y: float, tol: float):
-    return abs(y - x) <= tol
 
 def _integral_value_test(
         f: _RVFn, 
         integrate: _Fn[[_RVFn], _RVFn],
-        ts: list[float], 
+        ts_iterable: _Iterable[float], 
         true_integral: _RVFn, 
         tol: float):
+    
+    ts = _iterable_as_collection(ts_iterable)
     
     integral = integrate(f)
 

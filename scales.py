@@ -1,5 +1,5 @@
 
-from typing import Callable as _Fn
+from typing import Callable as _Fn, Iterable as _Iterable
 
 Key = _Fn[[int], float]
 Scale = _Fn[[float], Key]
@@ -9,7 +9,8 @@ def harmonic_scale(root_freq: float, /) -> Key:
         return root_freq * 2 ** (d / 12)
     return pitch_key
 
-def derive_scale(source_scale: Scale, degs: list[int], /) -> Scale:
+def derive_scale(source_scale: Scale, degs_iterable: _Iterable[int], /) -> Scale:
+    degs = list(degs_iterable)
     def scale(root_freq: float):
         source_key = source_scale(root_freq)
         def key(d: int):

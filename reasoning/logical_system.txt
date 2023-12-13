@@ -17,9 +17,9 @@ Truth tables for boolean operators:
     F | T G F        F | T T T        F | F G T
 
     IsNongappy:
-    T | F
-    G | T
-    F | F
+    T | T
+    G | F
+    F | T
 
 There is equality.  There are objects and predicates/relations.  Any object can be passed to any predicate.  In addition, every predicate is an object.
 

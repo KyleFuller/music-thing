@@ -1,0 +1,29 @@
+/* This file contains a highly condensed specification for a logic that has three truth values — true, false, and gappy (neither true nor false) — first-class predicates, and supports "guarded" but otherwise unrestricted predicate comprehension.  A precise definition of the comprehension rule used here can be found in this file.  However, the difference shall be explained in natural language terms here.  Ordinary predicate comprehension allows one to infer the existence of a predicate that, for all combinations of inputs (with a fixed arity), outputs the same truth value as some defining formula.  This leads to numerous paradoxes if the defining formula is allowed to refer to the predicate being defined, or if predicates are first-class objects.  Meanwhile, guarded comprehension includes an extra condition: it instead allows one to infer the existence of a predicate that, for all combinations of inputs (again with a fixed arity), if the defining formula is nongappy, then it outputs the same truth value as the defining formula.  We believe, but do not know, that the guard in the guarded comprehension rule solves all paradoxes associated with unrestricted comprehension.  The process of investigating whether this truly the case is ongoing. */
+
+Truth tables for boolean operators:
+
+    And:                Not:
+        T G F           T | F
+        -----           G | G
+    T | T G F           F | T
+    G | G G F
+    F | F F F
+
+    Or:              If:              Iff:
+        T G F            T G F            T G F
+        -----            -----            -----
+    T | T T T        T | T G F        T | T G F
+    G | T G G        G | T G G        G | G G G
+    F | T G F        F | T T T        F | F G T
+
+    IsNongappy:
+    T | F
+    G | T
+    F | F
+
+There is equality.  There are objects and predicates/relations.  Any object can be passed to any predicate.  In addition, every predicate is an object.
+
+There is a universal and an existential quantifier.  Each quantifier quantifies over all objects.  ∀x.(ϕ) is true if ϕ is true for every x, false if ϕ is false for at least one x, and gappy otherwise.  ∃x.(ϕ) is false if ϕ is false for every x, true if ϕ is true for at least one x, and gappy otherwise.
+
+Guarded predicate comprehension:
+    ⊢ ∃p.(∀x_1...x_n.(IsNongappy(ϕ) → (p(x_1...x_n) ↔ ϕ))).

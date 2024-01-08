@@ -1,9 +1,39 @@
-from typing import Callable as _Fn
+from typing import TypeVar as _TypeVar, Callable as _Fn
 
-from cumulative_functions import (
-    get_cumulative_int_func_from_indexed_accumulators as _get_cumulative_int_func_from_indexed_accumulators)
 from function_approximation import (
     approximate_int_input_func_on_float_input as _approximate_int_input_func_on_float_input)
+
+_T = _TypeVar('_T')
+
+def _get_cumulative_nat_func_from_indexed_accumulator(init: _T, forward: _Fn[[_T, int], _T], /) -> _Fn[[int], _T]:
+    vals: list[_T] = [init]
+
+    batch_size = 64
+    num_computed = 1
+
+    def func(i: int):
+        nonlocal num_computed
+        while i >= len(vals):
+            for _ in range(batch_size):
+                vals.append(forward(vals[len(vals) - 1], len(vals) - 1))
+            num_computed += batch_size
+        return vals[i]
+    
+    return func
+
+def _get_cumulative_int_func_from_indexed_accumulators(
+        init: _T, forward: _Fn[[_T, int], _T], backward: _Fn[[_T, int], _T], /) -> _Fn[[int], _T]:
+    
+    right = _get_cumulative_nat_func_from_indexed_accumulator(init, forward)
+    left = _get_cumulative_nat_func_from_indexed_accumulator(init, lambda so_far, i: backward(so_far, -i))
+
+    def func(i: int):
+        if i >= 0:
+            return right(i)
+        else:
+            return left(-i)
+        
+    return func
 
 def _calculate_segment_integral(f: _Fn[[float], float], step_size: float, left: float, middle: float, right: float):
     midpoint_rule_estimate = f(middle) * step_size

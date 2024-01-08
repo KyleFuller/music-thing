@@ -1,3 +1,7 @@
+"""
+Some pre-made functions for producing sounds.
+"""
+
 import math as _math
 from typing import Callable as _Fn
 
@@ -19,6 +23,10 @@ def get_degree_sin_sound(
         /
     ) -> tuple[(_Fn[[float], float]), tuple[float, float]]:
 
+    """ produces a sine sound corresponding to the degree in the key for the duration with a constant volume over time 
+    proportional to the volume given.  The frequency is adjusted very slightly so that the sound starts and ends 
+    smoothly."""
+
     sin, pi = _math.sin, _math.pi
 
     nonfudged_frequency = key(degree)
@@ -36,6 +44,10 @@ def get_degree_cos_hump_sound(
         hump_ratio: float,
         /
     ) -> tuple[(_Fn[[float], float]), tuple[float, float]]:
+
+    """ produces a sine sound corresponding to the degree in the key, but whose volume follows a hump with smooth ends.
+    The width of the hump approximately the duration given times the hump ratio, and the maximum volume is proportional
+    to the `volume` value provided.  The peak of the hump is at duration/2."""
 
     frequency = key(degree)
     tone = _scale_input(1 / frequency, _sin_wave)
@@ -55,6 +67,9 @@ def get_degree_exp_fading_sound(
         hump_ratio: float,
         /
     ) -> tuple[(_Fn[[float], float]), tuple[float, float]]:
+
+    """ produces a sine wave corresponding to the degree in the key, but for which at 0, the volume jumps from 0 to its
+    peak volume.  The volume then decays exponentially.  The half-life of the sound is proportional to the hump ratio. """
 
     frequency = key(degree)
     tone = _scale_input(1 / frequency, _scale_output(1/2, _translate_output(-1, _cos_wave)))

@@ -2,14 +2,20 @@
 from typing import Callable as _Fn, Iterable as _Iterable
 
 Key = _Fn[[int], float]
+""" A key is a strictly increasing function from integer "degrees" to frequencies. """
+
 Scale = _Fn[[float], Key]
+""" A scale is a function from a root frequency to a key that returns the root frequency given degree 0. """
 
 def harmonic_scale(root_freq: float, /) -> Key:
-    def pitch_key(d: int):
+    """ A scale with 12 (logarithmically) equally spaced pitches per octave. """
+    def key(d: int):
         return root_freq * 2 ** (d / 12)
-    return pitch_key
+    return key
 
 def derive_scale(source_scale: Scale, degs_iterable: _Iterable[int], /) -> Scale:
+    """ Given a scale and an iterable of degrees, returns another scale that selects only the given degrees from the 
+    original scale."""
     degs = list(degs_iterable)
     def scale(root_freq: float):
         source_key = source_scale(root_freq)
@@ -19,6 +25,7 @@ def derive_scale(source_scale: Scale, degs_iterable: _Iterable[int], /) -> Scale
     return scale
 
 def make_mode(source_scale: Scale, offset: int, /) -> Scale:
+    """ Produces a scale that "starts" at the degree `offset` of the source scale. """
     def mode(root_freq: float):
         source_key = source_scale(root_freq)
         def key(d: int):

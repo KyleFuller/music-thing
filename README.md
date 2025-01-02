@@ -1,5 +1,5 @@
 ## graph-thing
-In case my résumé accidentally gives the link for music-thing instead of graph-thing, here is the link to my graph-thing repository: [https://github.com/KyleFuller/graph-thing]
+In case my résumé accidentally gives the link for music-thing instead of graph-thing, here is the link to my graph-thing repository: https://github.com/KyleFuller/graph-thing
 
 # music-thing (NO LONGER MAINTAINED)
 

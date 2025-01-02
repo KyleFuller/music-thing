@@ -1,6 +1,7 @@
-# music-thing (NO LONGER MAINTAINED)
+## graph-thing
+In case my résumé accidentally gives the link for music-thing instead of graph-thing, here is the link to my graph-thing repository: [https://github.com/KyleFuller/graph-thing]
 
-## Old description:
+# music-thing (NO LONGER MAINTAINED)
 
 ### What is this?
 The goal of this project is to eventually create one or more libraries, in Python and/or other languages, for composing and reasoning about music computationally.
